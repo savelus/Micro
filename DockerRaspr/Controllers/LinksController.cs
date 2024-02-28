@@ -31,13 +31,12 @@ public class LinksController : ControllerBase
     }
 
     [HttpPost("create/")]
-    public async Task<long> Create([FromBody] Link link)
+    public async Task<string> Create([FromBody] string link)
     {
         var entity = new Link
         {
-            Id = link.Id,
-            Url = link.Url,
-            Status = link.Status,
+            Url = link,
+            Status = "",
         };
 
         await _repositoryLink.InsertAsync(entity);
@@ -49,7 +48,7 @@ public class LinksController : ControllerBase
         if (linkToQueue != null) 
             _rabbitMqService.SendMessage(linkToQueue);
 
-        return link.Id;
+        return link;
     }
 
     [HttpPut("update/")]

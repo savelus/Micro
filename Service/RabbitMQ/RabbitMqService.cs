@@ -23,11 +23,6 @@ public class RabbitMqService : IRabbitMqService
     public void SendMessage(object obj)
     {
         var message = JsonSerializer.Serialize(obj);
-        SendMessage(message);
-    }
-    
-    public void SendMessage(string message)
-    {
         using var connection = CreateChannel();
         using var model = connection.CreateModel();
         var body = Encoding.UTF8.GetBytes(message);

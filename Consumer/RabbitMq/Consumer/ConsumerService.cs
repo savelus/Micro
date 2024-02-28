@@ -40,7 +40,6 @@ public class ConsumerService : IConsumerService, IDisposable
         var consumer = new AsyncEventingBasicConsumer(_model);
         consumer.Received += async (ch, ea) =>
         {
-            Console.WriteLine("read event start");
             var body = ea.Body.ToArray();
             var link = Encoding.UTF8.GetString(body);
             var jsonLink = JsonSerializer.Deserialize<Link>(link);
@@ -48,19 +47,15 @@ public class ConsumerService : IConsumerService, IDisposable
             await RunAsyncGet(jsonLink);
             await Task.CompletedTask;
             _model.BasicAck(ea.DeliveryTag, false);
-            Console.WriteLine("read event end");
         };
         _model.BasicConsume(QueueName, false, consumer);
-        Console.WriteLine("Read end");
         await Task.CompletedTask;
     }
 
     public void Dispose()
     {
-        if (_model.IsOpen)
-            _model.Close();
-        if (_connection.IsOpen)
-            _connection.Close();
+        if (_model.IsOpen) _model.Close();
+        if (_connection.IsOpen) _connection.Close();
     }
 
     private async Task RunAsyncGet(Link link)
@@ -74,22 +69,21 @@ public class ConsumerService : IConsumerService, IDisposable
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         client.Timeout = TimeSpan.FromSeconds(5);
         
-        var statusFromCache = await _redisService.Get(link.Url, statusCode);
+        var statusFromCache = await _redisService.Get("redis" + link.Url, statusCode);
 
-        if (statusFromCache != null)
+        if (statusFromCache != null) {
             link.Status = statusFromCache;
+        }
         
-        Console.WriteLine(statusFromCache);
-        Console.WriteLine(statusCode);
+        Console.WriteLine($"status from cache = {statusFromCache}");
+        Console.WriteLine($"status from http service = {statusCode}");
 
         link.Status = statusCode;
 
         var serializeObj = JsonSerializer.Serialize(link);
         var stringContent = new StringContent(serializeObj, Encoding.UTF8, "application/json");
-        Console.WriteLine("1");
 
-        try
-        {
+        try {
             var response = await client.PutAsync("/Links/update/", stringContent);
         }
         catch (Exception e) {

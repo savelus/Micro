@@ -7,10 +7,9 @@ namespace Rabbit;
 
 public static class Module
 {
-    public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
+    public static void AddServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<IHttpService, HttpService.HttpService>();
         services.AddSingleton<IRabbitMqService, RabbitMqService>();
-        return services;
     }
 }

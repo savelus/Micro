@@ -12,8 +12,6 @@ services:
       resources:
         limits:
           memory: 1024M
-    ports:
-      - "8000:5000"
     networks:
       - practice
     depends_on:
@@ -29,8 +27,6 @@ services:
       resources:
         limits:
           memory: 1024M
-    ports:
-      - "8001:5000"
     networks:
       - practice
     depends_on:
@@ -46,8 +42,6 @@ services:
       resources:
         limits:
           memory: 1024M
-    ports:
-      - "8110:80"
     networks:
       - practice
     depends_on:
@@ -63,8 +57,6 @@ services:
       resources:
         limits:
           memory: 1024M
-    ports:
-      - "8111:80"
     networks:
       - practice
     depends_on:
@@ -78,8 +70,6 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: root
       POSTGRES_DB: Links
-    ports:
-      - "5432:5432"
     networks:
       - practice
     volumes:

@@ -7,9 +7,8 @@ namespace Data;
 
 public static class Module
 {
-    public static IServiceCollection AddData(this IServiceCollection services, IConfiguration configuration)
+    public static void AddData(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<IRepositoryLink, RepositoryLink>();
-        return services;
     }
 }

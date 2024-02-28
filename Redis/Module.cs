@@ -6,7 +6,7 @@ namespace Redis;
 
 public static class Module
 {
-    public static IServiceCollection AddRedis(this IServiceCollection services, IConfiguration configuration)
+    public static void AddRedis(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<IRedisService, RedisService>();
         services.AddStackExchangeRedisCache(options =>
@@ -14,6 +14,5 @@ public static class Module
             options.Configuration = "redis";
             options.InstanceName = "redis";
         });
-        return services;
     }
 }
